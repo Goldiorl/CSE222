@@ -1,4 +1,8 @@
-#CSE222: Computer Networks
+#CSE222: Computer Networks Wi 2015
+
+Corresponding course website:
+http://cseweb.ucsd.edu/classes/wi15/cse222A-a/
+
 
 An Home Openflow controller with logic written in Python and frontend written in Javascript
 
