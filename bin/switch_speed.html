@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>hopcon</title>
+
+    <link rel="stylesheet" href="/web/pure-min-0.5.0.css">
+    <link rel="stylesheet" href="/web/font-awesome.min.css">
+    <link rel="stylesheet" href="/web/pure-custom.css">
+  </head>
+
+  <body>
+
+  <div class="header">
+      <div id="menu">
+      <div class="home-menu pure-menu pure-menu-open pure-menu-horizontal pure-menu-fixed">
+          
+          <a class="pure-menu-heading" href="">hopcon</a>
+      </div>
+  </div>
+  </div>
+
+  <div id="layout">
+    <div id="menu">
+      <div class="pure-menu pure-menu-open">
+        <ul>
+            <li class=" ">
+                <a href="/web/stats.html">Statistics</a>
+            </li>
+            <li class=" ">
+                <a href="/web/parent.html">Parent Control</a>
+            </li>
+            <li class="menu-item-divided pure-menu-selected">
+                <a href="/web/switch_speed.html">Switch speed</a>
+            </li>
+            <li class=" ">
+                <a href="/web/bandwidth.html">Bandwidth</a>
+            </li>
+            <li class=" ">
+                <a href="/web/qos.html">Qos</a>
+            </li>
+        </ul>
+      </div> 
+    </div>
+
+    <div id="main">
+        <h2>Test your internet speed</h2>
+        <h4>&nbsp;&nbsp;&nbsp;&nbsp;Warning: It will block other device's connection for several seconds</h4>
+
+        <button id="myButton" class="pure-button pure-button-primary" >confirm</button>
+
+        <script type="text/javascript">
+            document.getElementById("myButton").onclick = function () {
+                location.href = "web/switch_speed.js";
+            };
+        </script>        
+    </div>
+
+  </div>
+  <!--
+  <script>
+  var url = "http://" + location.hostname + ":8080";
+  function clearQoS(){
+      var put_url = url.concat("/blacklist");
+      var cmd = {};
+      cmd['rule_id'] = "all"; 
+      var request_data = JSON.stringify(cmd); 
+        $.ajax({
+            url: put_url,
+            type: 'POST',
+            data: request_data,
+        });
+      }      
+
+  } 
+   <script src="/web/switch_speed.js"></script> -->
+</body>
+</html>

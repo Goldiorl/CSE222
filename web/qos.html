@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>hopcon</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/web/pure-min-0.5.0.css">
+    <link rel="stylesheet" href="/web/font-awesome.min.css">
+    <link rel="stylesheet" href="/web/pure-custom.css">
+    <link rel="stylesheet" href="/web/joint.all.min.css">
+  </head>
+
+  <body>
+
+  <div class="header">
+      <div id="menu">
+      <div class="home-menu pure-menu pure-menu-open pure-menu-horizontal pure-menu-fixed">
+          <a class="pure-menu-heading" href="">hopcon</a>
+      </div>
+  </div>
+  </div>
+
+  <div id="layout">
+    <div id="menu">
+        <div class="pure-menu pure-menu-open">
+            <ul>
+              <li class=" ">
+                  <a href="/web/stats.html">Statistics</a>
+              </li>
+              <li class=" ">
+                  <a href="/web/parent.html">Parent Control</a>
+              </li>
+              <li class=" ">
+                  <a href="/web/switch_speed.html">Switch speed</a>
+              </li>
+              <li class=" ">
+                <a href="/web/bandwidth.html">Bandwidth</a>
+              </li>
+              <li class="menu-item-divided pure-menu-selected">
+                  <a href="/web/parent.html">Qos</a>
+              </li>
+  <!--
+                <li class="menu-item-divided pure-menu-selected">
+                    <a href="/web/loadbalancer.html">Load balancer
+                    <i class="fa fa-sitemap"></i></a>
+                </li>
+  -->
+        </ul>
+      </div>
+    </div>
+
+    <div id="main">
+
+
+      <h2>Quality of service</h2>
+      <button href="#" class="pure-button pure-button-primary" onclick="clearQoS()">Clear rules and Queues</button>
+      <div id="clearQoSResult">
+      </div>
+
+
+
+
+      <p><strong>1. Rate allocation</strong></p>
+<!--         Balancing maximum rate
+        <br />
+        <form onSubmit="return rateAllocate()">
+          <select id = 'leftselect'>
+            <option value ="1">device1</option>
+            <option value ="2">device2</option>
+            <option value="3">device3</option>
+          </select>
+          <select id = 'rightselect'>
+            <option value ="1">device1</option>
+            <option value ="2">device2</option>
+            <option value="3">device3</option>
+          </select>      
+        <input type="submit" onClick=rateAllocate() class="pure-button pure-button-primary" value="Submit" />            
+        </form> -->
+        Proportional allocate maximum rate
+        <br />
+        Set ratio:
+      <input type="text" id="whichratio1" value="1" />
+      :
+      <input type="text" id="whichratio2" value="2" /> 
+      :
+      <input type="text" id="whichratio3" value="3" /> 
+        <input type="submit" onClick=rateAllocate() class="pure-button pure-button-primary" value="Submit" />   
+      <br/>        
+      </form>           
+      <div id="rateAllocateResults">
+      </div>
+
+
+
+
+      <p>&nbsp;</p>
+      <p><strong>2. Best serivce provision</strong></p>
+      Providing best quality service for
+      <form>
+      <input type="checkbox" name="d1" />
+      Device 1
+      <br />
+      <input type="checkbox" name="d2" />
+      Device 2
+      <br />
+      <input type="checkbox" name="d3" />
+      Device 3
+      <br />
+      <input type="submit" class="pure-button pure-button-primary" value="Submit" />
+      </form>      
+      <p>&nbsp;</p>
+
+
+
+      <p><strong>3. Service differentiation of maximum rate for a (group) user(s) </strong></p>
+        <select id="serviceType" style="width:12em;">
+          <option value="all">All</option>
+          <option value="UDP">UDP</option>
+          <option value="TCP">TCP</option>
+        </select>
+         &nbsp;&nbsp;&nbsp;&nbsp; Service Port:<input type="text" id="Port" /> 
+         &nbsp;&nbsp;&nbsp;&nbsp;     
+          <select id="Hosts" style="width:12em;" >
+          <option value="all">All</option>
+          <option value="1">Device1</option>
+          <option value="2">Device2</option>
+          <option value="3">Device3</option>
+          </select>
+                    Rate limit to:
+            <input type="text" id="serviceRateLimit" />
+          <br />
+      <input type="submit" onClick=serviceDiff() class="pure-button pure-button-primary" value="Submit" />
+      <div id="serviceDiffArea">
+      </div>      
+
+
+
+
+
+      <p><strong>4. Scheduled Tasks</strong></p>
+      For above selected rules, set applying time
+      <form>
+      Apply Time
+      <input type="text" name="applyStart" />
+      <input type="submit" class="pure-button pure-button-primary" value="Submit" />
+      </form>
+
+
+      <p>&nbsp;</p>      
+    
+
+
+      <div id="paper-container" class="paper"/>
+    </div><!-- main -->
+  </div><!--layout -->
+
+
+
+
+  <script>
+  var url = "http://" + location.hostname + ":8080";
+  var globalRate = 10000
+  function clearQoS(){
+      var put_url = url.concat("/qos/rules/0000000000000001");
+      var cmd = {};
+
+      cmd['qos_id'] = "all"; 
+      var request_data = JSON.stringify(cmd); 
+        $.ajax({
+            url: put_url,
+            type: 'DELETE',       
+            data: request_data,
+        success: function () {
+            $('#clearQoSResult').html('<p style="color:red; background:silver;">clear QoS Rules successfully.');;
+        },                  
+        error: function () {
+            $('#clearQoSResult').html('<p style="color:red; background:silver;">Error: QoS rule clear failed.');
+        }        
+        });
+
+        putUrl = url.concat("/qos/queue/0000000000000001");
+        $.ajax({
+            url: putUrl,
+            type: 'DELETE',
+            data: {}
+        });        
+      }      
+
+      function setbw(port,rate) {
+        bwdata = {};
+        bwdata["maxbw"] = rate;
+        bwdata["port"] = port;
+        var request_data = JSON.stringify(bwdata);
+        var put_url = 'http://127.0.0.1:8080/bw';
+        $.ajax({
+            url: put_url,
+            type: 'POST',
+            data: request_data,
+        });
+      }
+  function rateAllocate(){
+          var reading1 = parseInt(document.getElementById('whichratio1').value);
+          var reading2 = parseInt(document.getElementById('whichratio2').value);
+          var reading3 = parseInt(document.getElementById('whichratio3').value);
+          var sum = reading1+reading2+reading3;
+          //Get highest rate
+          //set queue for them
+          rateone = Math.round(reading1*10000000/sum);
+          ratetwo= Math.round(reading2*10000000/sum);
+          ratethree= Math.round(reading3*10000000/sum);
+          $('#rateAllocateResults').html('<p style="color:red; background:silver;">')
+
+          var put_url = url.concat("/qos/rules/0000000000000001");
+          setbw("3",ratethree.toString());          
+          setbw("1",rateone.toString());
+          setbw("2",ratetwo.toString());
+
+
+  } 
+
+
+  function serviceDiff(){
+        var select1 = $("#serviceType" ).val();
+        //first param
+        var select2 = $("#Hosts" ).val();
+        var box1 =$("#Port").val();
+        //Second param
+        var box2 =$("#serviceRateLimit").val();
+        if(select2 != "all"){
+          addQueue(select1, box1, select2, box2);
+        }
+        else{
+          addToMeter();
+        }
+  }
+
+  function addQueue(select1, box1, select2, box2){
+        addQueueData ={}; 
+        addQueueData['port'] = select2;
+        addQueueData['maxbw'] = box2;
+        var request_data = JSON.stringify(addQueueData);
+        var put_url = 'http://127.0.0.1:8080/bw';
+        $.ajax({
+            url: put_url,
+            type: 'POST',
+            data: request_data,
+        });      
+        //Add flowo
+        addQosFlow(select1, box1, select2 );
+  } 
+  function addQosFlow(select1, box1, select2){
+    addFlowData = {};
+    nw_dst = "10.0.0." + select2;
+    tp_dst= box1;
+    if(select1 != "all"){
+      nw_proto = select1;
+      addFlowData['match'] = {"nw_dst":nw_dst,"tp_dst" : box1,
+                              "nw_proto": select1}
+    }    
+    else{
+        addFlowData['match'] = {"nw_dst":nw_dst,"tp_dst" : box1}
+    }
+    addFlowData['actions'] = {"queue":"0"};
+
+    var put_url = "http://127.0.0.1:8080/qos/rules/0000000000000001"
+    var request_data = JSON.stringify(addFlowData);
+    //document.getElementById("serviceDiffArea").innerHTML(nw_dst+tp_dst+request_data);
+    window.alert(nw_dst+tp_dst+request_data);
+    $.ajax({
+        url: put_url,
+        type: 'POST',
+        data: request_data
+    });      
+  }
+  function addMeter(select1, box1, box2){
+    addMeterData = {};
+    addMeterData['max_rate'] = box2;
+    addMeterData['action'] ="DROP";
+    var put_url = 'http://127.0.0.1:8080/bw';  
+    $.ajax({
+        url: put_url,
+        type: 'POST',
+        data: addMeterData
+    });      
+
+
+
+
+  } 
+
+   </script>
+
+
+
+
+
+  <script src="/web/jquery.min.js"></script>
+  <script src="/web/utils.js"></script>
+  <script src="/web/parent.js"></script>
+  </body>
+</html>

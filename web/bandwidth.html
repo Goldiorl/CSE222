@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>hopcon</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/web/pure-min-0.5.0.css">
+    <link rel="stylesheet" href="/web/font-awesome.min.css">
+    <link rel="stylesheet" href="/web/pure-custom.css">
+    <link rel="stylesheet" href="/web/joint.all.min.css">
+    <script src="/web/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+  <div class="header">
+      <div id="menu">
+      <div class="home-menu pure-menu pure-menu-open pure-menu-horizontal pure-menu-fixed">
+          <a class="pure-menu-heading" href="">hopcon</a>
+      </div>
+  </div>
+  </div>
+
+  <div id="layout">
+    <div id="menu">
+      <div class="pure-menu pure-menu-open">
+        <ul>
+          <li class=" ">
+              <a href="/web/stats.html">Statistics</a>
+          </li>
+          <li class=" ">
+              <a href="/web/parent.html">Parent Control</a>
+          </li>
+          <li class=" ">
+              <a href="/web/switch_speed.html">Switch speed</a>
+          </li> 
+          <li class="menu-item-divided pure-menu-selected">
+              <a href="/web/bandwidth.html">Bandwidth</a>
+          </li>
+          <li class=" ">
+              <a href="/web/qos.html">Qos</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="main">
+      <h2>Set bandwidth for your device</h2>
+
+      <div class="pure-control-group">
+        <form class="pure-form pure-form-aligned" onsubmit = "return false">
+          <label>Device 1&nbsp;&nbsp;</label>
+          <input id="d1" type="text" placeholder="Bandwidth" required>
+          <button href="#" class="pure-button pure-button-primary"
+        onclick="setbw1()">Set</button>
+        </form>
+      </div>
+      
+      <div class="pure-control-group">
+        <form class="pure-form pure-form-aligned" onsubmit = "return false">
+          <label>Device 2&nbsp;&nbsp;</label>
+          <input id="d2" type="text" placeholder="Bandwidth" required>
+          <button href="#" class="pure-button pure-button-primary"
+        onclick="setbw2()">Set</button>
+        </form>
+      </div>
+      
+      <div class="pure-control-group">
+        <form class="pure-form pure-form-aligned" onsubmit = "return false">
+          <label>Device 3&nbsp;&nbsp;</label>
+          <input id="d3" type="text" placeholder="Bandwidth" required>
+          <button href="#" class="pure-button pure-button-primary"
+        onclick="setbw3()">Set</button>
+        </form>
+      </div>
+
+    </div>
+
+    <script>
+      function setbw1(){
+        setbw("1");
+      }
+
+      function setbw2(){
+        setbw("2");
+      }
+
+      function setbw3(){
+        setbw("3");
+      }
+
+      function setbw(port) {
+        bwdata = {};
+        bwdata["maxbw"] = $('#d'+port).val();
+        bwdata["port"] = port;
+        var request_data = JSON.stringify(bwdata);
+        var put_url = 'http://127.0.0.1:8080/bw';
+        $.ajax({
+            url: put_url,
+            type: 'POST',
+            data: request_data,
+        });
+      }
+    </script>
+
+    </div><!-- main -->
+  </div><!--layout-->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+      <script src="/web/joint.all.min.js"></script>
+      <script src="/web/joint.shapes.erd.js"></script>
+  </body>
+</html>
