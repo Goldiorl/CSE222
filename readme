@@ -1,9 +1,0 @@
-To start Mininet, run command
-
-cd bin
-sudo python simple.py
-
-To start the server and controller, run command
-
-cd .. 
-sh setup.sh
